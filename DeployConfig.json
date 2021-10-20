@@ -1,0 +1,19 @@
+{
+  "Token": "ScreepsTokenForDeploy",
+  "Deploys": [
+    {
+      // "Protocol": "https",
+      // "Host": "screeps.com",
+
+      // Server types: persistent, ptr, season
+      // "ServerType": "persistent",
+
+      "Branch": "test",
+
+      // Files
+      "Modules": [
+        "main.js"
+      ]
+    }
+  ]
+}
