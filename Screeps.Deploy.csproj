@@ -15,6 +15,7 @@
     <PackageIconUrl />
     <PackageTags>Screeps Deploy Runtime Application Game CSharp Link DevLink</PackageTags>
     <PackageReleaseNotes>First version</PackageReleaseNotes>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,6 +25,10 @@
 
   <ItemGroup>
     <None Include="Icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
