@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace ScreepsDeploy
+namespace Screeps.Deploy
 {
     class Config
     {

@@ -1,7 +1,8 @@
-﻿using ScreepsNetworkAPI.API;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace ScreepsDeploy
+using Screeps.Network.API;
+
+namespace Screeps.Deploy
 {
     class DeployConfig
     {

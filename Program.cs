@@ -2,16 +2,16 @@
 using System.IO;
 using System.Collections.Generic;
 
-using ScreepsNetworkAPI;
-using ScreepsNetworkAPI.API.User;
+using Screeps.Network;
+using Screeps.Network.API.User;
 
 using Newtonsoft.Json;
 
-namespace ScreepsDeploy
+namespace Screeps.Deploy
 {
     class Program
     {
-        private static ConsoleColor s_oldColor;
+        private static ConsoleColor s_defaultColor;
 
         private static void Main(string[] args)
         {
@@ -36,27 +36,31 @@ namespace ScreepsDeploy
 
         private static void InitializeConsole()
         {
-            s_oldColor = Console.ForegroundColor;
+            s_defaultColor = Console.ForegroundColor;
             AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
 
             Console.Title = "Screeps deploy";
-            Console.CursorSize = 1;
+            TrySetCursorSize(1);
+        }
+        private static void TrySetCursorSize(int size)
+        {
+            try { Console.CursorSize = size; } catch { };
         }
         private static void OnProcessExit(object sender, EventArgs e)
         {
-            Console.ForegroundColor = s_oldColor;
+            Console.ForegroundColor = s_defaultColor;
         }
 
         private static void Deploy(string configPath)
         {
             var config = LoadConfig(configPath);
-            var api = new ScreepsAPI(config.Token);
+            var apiClient = new Client(config.Token);
 
-            if (!IsValidToken(api))
+            if (!IsValidToken(apiClient))
                 return;
 
-            PrintUsername(api);
-            DeployCode(api, config.Deploys);
+            PrintUsername(apiClient);
+            DeployCode(apiClient, config.Deploys);
         }
         private static Config LoadConfig(string path)
         {
@@ -69,7 +73,7 @@ namespace ScreepsDeploy
             return config;
         }
 
-        private static void DeployCode(ScreepsAPI api, DeployConfig[] configs)
+        private static void DeployCode(Client apiClient, DeployConfig[] configs)
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"[Deploying {configs.Length} configs]");
@@ -78,25 +82,25 @@ namespace ScreepsDeploy
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write($"[Deploy #{i + 1}] ");
-                DeployCode(api, configs[i]);
+                DeployCode(apiClient, configs[i]);
             }
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("[Deployed]");
         }
-        private static void DeployCode(ScreepsAPI api, DeployConfig config)
+        private static void DeployCode(Client apiClient, DeployConfig config)
         {
             var cursor = Console.CursorLeft;
             Console.ForegroundColor = ConsoleColor.Yellow;
 
             if (config.Protocol != default)
-                api.Protocol = config.Protocol;
+                apiClient.Protocol = config.Protocol;
 
             if (config.Host != default)
-                api.Host = config.Host;
+                apiClient.Host = config.Host;
 
             if (config.ServerType != default)
-                api.ServerType = config.ServerType;
+                apiClient.ServerType = config.ServerType;
 
             Console.Write($"Loading {config.Modules.Length} modules...");
             var modules = LoadModules(config);
@@ -105,7 +109,7 @@ namespace ScreepsDeploy
             Console.Write($"Deploying {config.Modules.Length} modules...");
 
             var request = new CodeRequest(config.Branch, modules);
-            var response = api.UploadCode(request);
+            var response = apiClient.UploadCode(request);
 
             Console.CursorLeft = cursor;
             Console.Write(new string(' ', Console.BufferWidth - cursor - 1));
@@ -140,12 +144,12 @@ namespace ScreepsDeploy
             return modules;
         }
 
-        private static void PrintUsername(ScreepsAPI api)
+        private static void PrintUsername(Client api)
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("[Username] " + api.GetUsername());
         }
-        private static bool IsValidToken(ScreepsAPI api)
+        private static bool IsValidToken(Client api)
         {
             if (api.IsValidToken())
             {
