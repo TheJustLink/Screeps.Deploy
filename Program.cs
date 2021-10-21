@@ -17,8 +17,6 @@ namespace Screeps.Deploy
         {
             InitializeConsole();
 
-            Console.ReadKey(true);
-
             if (args.Length == 0) return;
 
             try
@@ -30,8 +28,6 @@ namespace Screeps.Deploy
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(ex.Message);
             }
-
-            Console.ReadKey(true);
         }
 
         private static void InitializeConsole()

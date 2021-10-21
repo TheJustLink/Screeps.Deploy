@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Screeps.Deploy": {
+      "commandName": "Project",
+      "commandLineArgs": "DefaultPathToConfig"
+    }
+  }
+}
