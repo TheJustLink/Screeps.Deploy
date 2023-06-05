@@ -1,17 +1,20 @@
 ﻿using System;
 using System.IO;
+using System.Text.Json;
 using System.Collections.Generic;
 
 using Screeps.Network;
 using Screeps.Network.API.User;
-
-using Newtonsoft.Json;
-
 namespace Screeps.Deploy
 {
     class Program
     {
         private static ConsoleColor s_defaultColor;
+        private static JsonSerializerOptions s_jsonOptions = new()
+        {
+            IncludeFields = true,
+            ReadCommentHandling = JsonCommentHandling.Skip
+        };
 
         private static void Main(string[] args)
         {
@@ -50,7 +53,14 @@ namespace Screeps.Deploy
         private static void Deploy(string configPath)
         {
             var config = LoadConfig(configPath);
-            var apiClient = new Client(config.Token);
+            if (!TryLoadToken(config.TokenPath, out var token))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"ERROR : token file '{token}' not found");
+                return;
+            }
+            
+            var apiClient = new Client(token);
 
             if (!IsValidToken(apiClient))
                 return;
@@ -64,9 +74,20 @@ namespace Screeps.Deploy
                 throw new ArgumentException($"Config file '{path}' not found", nameof(path));
 
             var content = File.ReadAllText(path);
-            var config = JsonConvert.DeserializeObject<Config>(content);
+            var config = JsonSerializer.Deserialize<Config>(content, s_jsonOptions);
 
             return config;
+        }
+        private static bool TryLoadToken(string path, out string token)
+        {
+            if (!File.Exists(path))
+            {
+                token = null;
+                return false;
+            }
+
+            token = File.ReadAllText(path);
+            return true;
         }
 
         private static void DeployCode(Client apiClient, DeployConfig[] configs)
@@ -98,11 +119,11 @@ namespace Screeps.Deploy
             if (config.ServerType != default)
                 apiClient.ServerType = config.ServerType;
 
-            Console.Write($"Loading {config.Modules.Length} modules...");
+            Console.Write($"Loading {config.Modules.Count} modules...");
             var modules = LoadModules(config);
             
             Console.CursorLeft = cursor;
-            Console.Write($"Deploying {config.Modules.Length} modules...");
+            Console.Write($"Deploying {config.Modules.Count} modules...");
 
             var request = new CodeRequest(config.Branch, modules);
             var response = apiClient.UploadCode(request);
@@ -111,7 +132,7 @@ namespace Screeps.Deploy
             Console.Write(new string(' ', Console.BufferWidth - cursor - 1));
             Console.CursorLeft = cursor;
 
-            if (response.OK)
+            if (response.Ok)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("OK");
@@ -124,17 +145,16 @@ namespace Screeps.Deploy
         }
         private static Dictionary<string, string> LoadModules(DeployConfig config)
         {
-            var modules = new Dictionary<string, string>(config.Modules.Length);
+            var modules = new Dictionary<string, string>(config.Modules.Count);
 
-            foreach (var modulePath in config.Modules)
+            foreach (var module in config.Modules)
             {
-                if (!File.Exists(modulePath))
-                    throw new ArgumentException($"File '{modulePath}' not found", nameof(modulePath));
+                if (!File.Exists(module.Value))
+                    throw new ArgumentException($"File '{module.Value}' not found", nameof(module.Value));
+                
+                var moduleContent = File.ReadAllText(module.Value);
 
-                var moduleName = Path.GetFileNameWithoutExtension(modulePath);
-                var module = File.ReadAllText(modulePath);
-
-                modules.Add(moduleName, module);
+                modules.Add(module.Key, moduleContent);
             }
 
             return modules;

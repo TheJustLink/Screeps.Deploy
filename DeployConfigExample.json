@@ -8,7 +8,7 @@
       // Server types: persistent, ptr, season
       // "ServerType": "persistent",
 
-      "Branch": "test",
+      "Branch": "ScreepsDeployBranch",
 
       // Files
       "Modules": [

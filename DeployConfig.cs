@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
 
 using Screeps.Network.API;
 
@@ -10,7 +10,7 @@ namespace Screeps.Deploy
         public string Host;
         public ServerType ServerType;
 
-        [JsonRequired] public string Branch;
-        [JsonRequired] public string[] Modules;
+        public string Branch;
+        public Dictionary<string, string> Modules;
     }
 }
