@@ -11,12 +11,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-
-    - name: Pack
-      run: dotnet pack --configuration Release --output .
-      
-    - name: Push to nuget
-      run: dotnet nuget push *.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source https://nuget.pkg.github.com/acraven/index.json --skip-duplicate
+    
+    - name: Restore dependencies
+      run: dotnet restore
+    
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
       
     - name: Push to github
-      run: dotnet nuget push *.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source "github" --skip-duplicate
+      run: dotnet nuget push ./bin/Release/*.nupkg -s https://nuget.pkg.github.com/TheJustLink/index.json --skip-duplicate -k ${{github.token}}
+      
+    - name: Push to nuget
+      run: dotnet nuget push ./bin/Release/*.nupkg -s https://api.nuget.org/v3/index.json --skip-duplicate -k ${{secrets.NUGET_API_KEY}}
