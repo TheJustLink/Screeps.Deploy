@@ -7,6 +7,7 @@
     <Nullable>disable</Nullable>
 
 	<VersionPrefix>1.0.0</VersionPrefix>
+	<PackageReleaseNotes>.Net 7.0, new example, changed to dotnet tool</PackageReleaseNotes>
 
 	<Title>$(AssemblyName)</Title>
     <Authors>LINKICoder</Authors>
@@ -19,9 +20,7 @@
     <AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
     <FileVersion>$(VersionPrefix)</FileVersion>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageReleaseNotes>.Net 7.0, new example, changed to dotnet tool</PackageReleaseNotes>
     <PackageTags>Screeps;Deploy;JS;C#;CSharp;ScreepsSharp;Screeps.Deploy;Deploying;Code;Link;JustLink</PackageTags>
-    <GenerateDocumentationFile>False</GenerateDocumentationFile>
     <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
@@ -31,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Network\Screeps.Network\Screeps.Network.csproj" />
+    <PackageReference Include="Screeps.Network" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
