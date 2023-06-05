@@ -1,0 +1,23 @@
+name: NugetDeploy
+
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Pack
+      run: dotnet pack --configuration Release --output .
+      
+    - name: Push to nuget
+      run: dotnet nuget push *.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source https://nuget.pkg.github.com/acraven/index.json --skip-duplicate
+    - name: Push to github
+      run: dotnet nuget push *.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source "github" --skip-duplicate
+    
+    - name: Done
