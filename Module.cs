@@ -1,8 +1,7 @@
-﻿namespace Screeps.Deploy
+﻿namespace Screeps.Deploy;
+
+public class Module
 {
-    public class Module
-    {
-        public string Name;
-        public string Path;
-    }
+    public string Name;
+    public string Path;
 }

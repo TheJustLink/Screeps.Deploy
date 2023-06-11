@@ -1,16 +1,9 @@
 ﻿using System.Collections.Generic;
 
-using Screeps.Network.API;
+namespace Screeps.Deploy;
 
-namespace Screeps.Deploy
+class DeployConfig
 {
-    class DeployConfig
-    {
-        public string Protocol;
-        public string Host;
-        public ServerType ServerType;
-
-        public string Branch;
-        public Dictionary<string, string> Modules;
-    }
+    public string Branch;
+    public Dictionary<string, string> Modules;
 }

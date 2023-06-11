@@ -1,8 +1,14 @@
-﻿namespace Screeps.Deploy
+﻿using Screeps.Network.API;
+
+namespace Screeps.Deploy;
+
+class Config
 {
-    class Config
-    {
-        public string TokenPath;
-        public DeployConfig[] Deploys;
-    }
+    public string Protocol;
+    public string Host;
+    public ServerType ServerType;
+
+    public string TokenPath;
+
+    public DeployConfig[] Deploys;
 }

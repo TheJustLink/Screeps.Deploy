@@ -1,11 +1,12 @@
 {
-  // "Protocol": "https",
-  // "Host": "screeps.com",
+  "Protocol": "http",
+  "Host": "127.0.0.1:21025",
 
   // Server types: persistent, ptr, season
   // "ServerType": "persistent",
 
-  "TokenPath": "Token.txt",
+  // Install auth mod for private server, change password in game, then put username:password in token file
+  "TokenPath": "PrivateServerToken.txt",
 
   "Deploys": [
     {

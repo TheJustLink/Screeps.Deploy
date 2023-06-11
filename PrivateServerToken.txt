@@ -1,0 +1,1 @@
+Put your token or username/email:password, add this file to git ignore if you want to publish your code to github
